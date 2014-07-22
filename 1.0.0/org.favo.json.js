@@ -112,7 +112,18 @@ function sendRequest (method, url, param, headers) {
 		Ti.API.log("JSON", "error received", err);
 		promise.reject(err);
 	};
+
 	
+	// GET params get moved into the url (enforced with Titanium SDK 3.3.0)
+	if ( method == "GET" && param ) {
+		var query = '?';
+		for ( var i in param ) {
+			query += "&" + i + "=" + encodeURIComponent(param[i]);
+		}
+		url += query;
+		param = null;
+	}
+
 	client.open(method, url);
 
 	// set custom headers
