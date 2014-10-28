@@ -3,7 +3,7 @@ var Promise = require('org.favo.promise');
 var jsonCacheTimeout = null;
 var jsonCache = {};
 var jsonCacheInterval = null;
-var httpTimeout = 30;
+var httpTimeout = 30*1000;
 
 function clearjsonCache() {
 	var now = new Date().getTime();
