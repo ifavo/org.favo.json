@@ -3,7 +3,7 @@ var Promise = require('org.favo.promise');
 var jsonCacheTimeout = null;
 var jsonCache = {};
 var jsonCacheInterval = null;
-var httpTimeout = 30*1000;
+var httpTimeout = 40*1000;
 
 function clearjsonCache() {
 	var now = new Date().getTime();
@@ -115,15 +115,19 @@ function sendRequest (method, url, param, headers) {
 					data: this.responseText
 				};
 			}
+			client = null;
+
 		}
 		catch (e) {
 			promise.reject(e);
+			client = null;
 		}
 	};
 
 	client.onerror = function (err) {
 		Ti.API.log("JSON", "error received", err);
 		promise.reject(err);
+		client = null;
 	};
 
 	
