@@ -5,6 +5,14 @@ var jsonCache = {};
 var jsonCacheInterval = null;
 var httpTimeout = 40*1000;
 
+/**
+ * SHOW DEBUG MESSAGES
+ * @type {Boolean}
+ */
+var debugMessages = false;
+
+var log = (debugMessages) ? console.log : function(){};
+
 function clearjsonCache() {
 	var now = new Date().getTime();
 	for ( var i in jsonCache ) {
@@ -21,18 +29,18 @@ function clearjsonCache() {
  */
 function setCache (timeout) {
 	timeout = Number(timeout);
-	
+
 	// clear potential previous interval for gc
 	if ( jsonCacheInterval ) {
 		clearInterval(jsonCacheInterval);
 	}
 
-	// enable cache	
+	// enable cache
 	if ( timeout > 0 ) {
 		jsonCacheTimeout = Number(timeout) * 1000;
 		jsonCacheInterval = setInterval(clearjsonCache, jsonCacheTimeout);
 	}
-	
+
 	else {
 		jsonCacheTimeout = null;
 	}
@@ -87,7 +95,7 @@ function sendRequest (method, url, param, headers) {
 		var jsonParams = JSON.stringify(param);
 		var now = new Date().getTime();
 		if ( jsonCache[url+jsonParams] && jsonCache[url+jsonParams].time >= now ) {
-			Ti.API.log("JSON", "serving from jsonCache");
+			log("JSON", "serving from jsonCache");
 			try {
 				promise.resolve(JSON.parse(jsonCache[url+jsonParams].data));
 			}
@@ -97,13 +105,13 @@ function sendRequest (method, url, param, headers) {
 			return promise;
 		}
 	}
-	
-	Ti.API.log("getJSON", url, param);
+
+	log("getJSON", url, param);
 	var client = Titanium.Network.createHTTPClient({
 		timeout: httpTimeout
 	});
 	client.onload = function () {
-		Ti.API.log("JSON", "response received", url);
+		log("JSON", "response received", url);
 		try {
 			var data = JSON.parse(this.responseText);
 			promise.resolve(data);
@@ -125,12 +133,12 @@ function sendRequest (method, url, param, headers) {
 	};
 
 	client.onerror = function (err) {
-		Ti.API.log("JSON", "error received", err);
+		log("JSON", "error received", err);
 		promise.reject(err);
 		client = null;
 	};
 
-	
+
 	// GET params get moved into the url (enforced with Titanium SDK 3.3.0)
 	if ( method == "GET" && param ) {
 		var query = '?';
@@ -153,7 +161,7 @@ function sendRequest (method, url, param, headers) {
 	}
 
 	client.send(param || null);
-	
+
 	return promise;
 }
 
