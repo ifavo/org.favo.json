@@ -133,8 +133,9 @@ function sendRequest (method, url, param, headers) {
 	};
 
 	client.onerror = function (err) {
-		log("JSON", "error received", err);
-		promise.reject(err);
+		var errorMsg = '[' + err.error + ' ' + err.code + ']: ' +  this.responseText;
+		log("JSON", errorMsg);
+		promise.reject(errorMsg);
 		client = null;
 	};
 
