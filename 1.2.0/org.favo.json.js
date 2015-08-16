@@ -1,4 +1,4 @@
-var Promise = require('de.hpm.q');
+var Promise = require('org.favo.promise');
 
 var jsonCacheTimeout = null;
 var jsonCache = {};
