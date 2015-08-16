@@ -1,9 +1,0 @@
-{
-    "description": "Online JSON Communication",
-    "directories": {
-        "lib": "."
-    },
-    "main": "org.favo.json",
-    "name": "org.favo.json",
-    "version": "1.2.0"
-}
